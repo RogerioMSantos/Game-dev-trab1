@@ -11,7 +11,8 @@ public class playerMovement : MonoBehaviour
     private Vector2 _smoothMovementInput;
     private Vector2 _movementInputSmoothVelocity;
 
-    [SerializeField] private FieldOfView fieldOfView;
+    // [SerializeField] 
+    // private FieldOfView fieldOfView;
 
     [SerializeField]
     private float _speed;
@@ -45,7 +46,7 @@ public class playerMovement : MonoBehaviour
             Quaternion finalRotation = Quaternion.RotateTowards(transform.rotation, newRotation, _rotationSpeed * Time.deltaTime);
 
             _rb.MoveRotation(finalRotation);
-            fieldOfView.setAimDirection(_rb.rotation);
+            //fieldOfView.setAimDirection(_rb.rotation);
         }
     }
 
@@ -55,6 +56,6 @@ public class playerMovement : MonoBehaviour
     }
 
     private void Update(){
-        fieldOfView.setOrigin(_rb.position);
+        //fieldOfView.setOrigin(_rb.position);
     }
 }

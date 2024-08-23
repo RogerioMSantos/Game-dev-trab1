@@ -62,7 +62,22 @@ public class enemyMovement : MonoBehaviour
         }
         else
         {
-            _rb.velocity = Vector2.zero;
+            //_rb.velocity = Vector2.zero;
         }
     }
+
+    public void RotateToPoint(Vector3 point)
+    {
+        Vector2 enemyToPlayerVector = (point - transform.position).normalized;
+
+        // Calcula o ângulo desejado
+        float targetAngle = Mathf.Atan2(enemyToPlayerVector.y, enemyToPlayerVector.x) * Mathf.Rad2Deg - 90f;
+
+        // Calcula a rotação necessária para alcançar o ângulo desejado
+        float angle = Mathf.MoveTowardsAngle(transform.eulerAngles.z, targetAngle, _rotationSpeed * 10 * Time.deltaTime);
+
+        // Aplica a rotação
+        transform.rotation = Quaternion.Euler(0, 0, angle);
+    }
+
 }

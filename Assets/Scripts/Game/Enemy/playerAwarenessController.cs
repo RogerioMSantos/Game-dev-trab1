@@ -11,6 +11,9 @@ public class PlayerAwarenessController : MonoBehaviour
     [SerializeField]
     private float _playerAwarenessDistance;
 
+    [SerializeField]
+    private FieldOfView fieldOfView;
+
     private Transform _player;
 
     private void Awake()
@@ -29,7 +32,7 @@ public class PlayerAwarenessController : MonoBehaviour
         Vector2 enemyToPlayerVector = _player.position - transform.position;
         DirectionToPlayer = enemyToPlayerVector.normalized;
 
-        if (enemyToPlayerVector.magnitude <= _playerAwarenessDistance)
+        if (fieldOfView.IsPlayerDetected())
         {
             awareOfPlayer = true;
         }

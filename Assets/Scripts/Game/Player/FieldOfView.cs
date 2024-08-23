@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using CodeMonkey.Utils;
+using System;
+
 public class FieldOfView : MonoBehaviour
 {
     private Mesh mesh;
@@ -10,6 +12,7 @@ public class FieldOfView : MonoBehaviour
     float fov;
     private float startingAngle;
 
+    private bool playerDetected;
 
     private void Start()
     {
@@ -19,10 +22,15 @@ public class FieldOfView : MonoBehaviour
         fov = 90f;
         origin = Vector3.zero;
         startingAngle = 0f;
+        playerDetected = false;
     }
+
     private void Update()
     {
 
+        Vector3 raycastOrigin = transform.position;
+
+        float raycastAngle = transform.eulerAngles.z;
 
         int rayCount = 50;
         float angle = startingAngle;
@@ -39,11 +47,13 @@ public class FieldOfView : MonoBehaviour
         int trianglesIndex = 0;
         int vertexIndex = 1;
 
+        bool playerNotDetected = true;
+
         for (int i = 0; i <= rayCount; i++)
         {
             Vector3 vertex;
 
-            RaycastHit2D raycast = Physics2D.Raycast(origin, UtilsClass.GetVectorFromAngle(angle), viewDistance);
+            RaycastHit2D raycast = Physics2D.Raycast(raycastOrigin, UtilsClass.GetVectorFromAngle(raycastAngle), viewDistance);
 
             if (raycast.collider == null)
             {
@@ -51,7 +61,12 @@ public class FieldOfView : MonoBehaviour
             }
             else
             {
-                vertex = raycast.point;
+                if (raycast.collider.CompareTag("Player"))
+                {
+                    playerNotDetected = false;
+                }
+                vertex = transform.InverseTransformPoint(raycast.point);
+                
             }
 
             vertices[vertexIndex] = vertex;
@@ -68,22 +83,37 @@ public class FieldOfView : MonoBehaviour
             vertexIndex++;
 
             angle -= angleIncrease;
+            raycastAngle -= angleIncrease;
         }
 
+        playerDetected = !playerNotDetected;
 
         mesh.vertices = vertices;
         mesh.uv = uv;
         mesh.triangles = triangles;
     }
 
-    public void setOrigin(Vector3 origin)
+    public void SetOrigin(Vector3 origin)
     {
         this.origin = origin;
     }
 
-    public void setAimDirection(float aimDirection)
+    public void SetAimDirection(float aimDirection)
     {
         this.startingAngle = aimDirection - fov / 2f + 180;
     }
 
+    public void SetAimDirection(Vector3 aimDirection)
+    {
+        this.startingAngle = UtilsClass.GetAngleFromVector(aimDirection) - fov / 2f + 180;
+    }
+
+    /**
+    * Retorna se o player está no campo de visão
+    *
+    */
+    public bool IsPlayerDetected()
+    {
+        return playerDetected;
+    }
 }
