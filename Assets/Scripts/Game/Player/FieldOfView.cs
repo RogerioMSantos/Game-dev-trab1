@@ -53,7 +53,9 @@ public class FieldOfView : MonoBehaviour
         {
             Vector3 vertex;
 
-            RaycastHit2D raycast = Physics2D.Raycast(raycastOrigin, UtilsClass.GetVectorFromAngle(raycastAngle), viewDistance);
+            int layerMask = ~LayerMask.GetMask("Enemy"); 
+
+            RaycastHit2D raycast = Physics2D.Raycast(raycastOrigin, UtilsClass.GetVectorFromAngle(raycastAngle), viewDistance, layerMask);
 
             if (raycast.collider == null)
             {
