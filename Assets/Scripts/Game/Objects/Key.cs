@@ -4,7 +4,9 @@ using UnityEngine;
 
 public class Key : MonoBehaviour
 {
-    [SerializeField] private KeyType keyType;
+    [SerializeField] private KeyType keyType; // Tipo da chave
+    [SerializeField] private Sprite keySprite; // Sprite da chave
+
     public enum KeyType
     {
         Ruby1,
@@ -18,5 +20,10 @@ public class Key : MonoBehaviour
     public KeyType GetKeyType()
     {
         return keyType;
+    }
+
+    public Sprite GetSprite()
+    {
+        return keySprite;
     }
 }

@@ -55,7 +55,8 @@ public class playerMovement : MonoBehaviour
         _movementInput = inputValue.Get<Vector2>();
     }
 
-    private void Update(){
+    private void Update()
+    {
         //fieldOfView.setOrigin(_rb.position);
     }
 }

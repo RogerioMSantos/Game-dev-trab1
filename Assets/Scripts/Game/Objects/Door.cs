@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class Door : MonoBehaviour
 {
     [SerializeField] private Key.KeyType keyType;
-
+    [SerializeField] private TMP_Text messageText; 
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
@@ -13,7 +14,13 @@ public class Door : MonoBehaviour
         if (keyHolder != null && keyHolder.ContainsKey(keyType))
         {
             OpenDoor();
-            keyHolder.RemoveKey(keyType); // Remove a chave do inventário do player
+            keyHolder.RemoveKey(keyType);
+        }
+        else if (keyType.Equals(Key.KeyType.Gem) && !keyHolder.ContainsKey(keyType))
+        {
+            messageText.text = "Preciso achar a joia primeiro!";
+            StartCoroutine(ClearMessage());
+
         }
     }
 
@@ -22,5 +29,11 @@ public class Door : MonoBehaviour
 
         Destroy(gameObject);
 
+    }
+
+    private IEnumerator ClearMessage()
+    {
+        yield return new WaitForSeconds(2); // Espera 2 segundos.
+        messageText.text = ""; // Limpa a mensagem.
     }
 }
