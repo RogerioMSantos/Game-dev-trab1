@@ -3,6 +3,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class enemyMovement : MonoBehaviour
 {
@@ -11,10 +13,10 @@ public class enemyMovement : MonoBehaviour
 
     [SerializeField]
     private float _rotationSpeed;
-    
+
     [SerializeField]
     Transform target;
-    
+
     NavMeshAgent agent;
 
     private Rigidbody2D _rb;
@@ -34,7 +36,7 @@ public class enemyMovement : MonoBehaviour
 
     private void FixedUpdate()
     {
-        
+
         UpdateTargetDirection();
         RotateTowardsTarget();
         //MoveTowardsTarget();
@@ -97,7 +99,15 @@ public class enemyMovement : MonoBehaviour
 
         // Aplica a rotação
         transform.rotation = Quaternion.Euler(0, 0, angle);
-        
+
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            SceneManager.LoadSceneAsync(2);
+        }
     }
 
 }
