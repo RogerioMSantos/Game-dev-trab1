@@ -33,7 +33,7 @@ public class EnemyPatrol : MonoBehaviour
 
     private void Update()
     {
-        if(!fieldOfView.IsPlayerDetected()){
+        if(!fieldOfView.IsPlayerDetected() && !enemyMovement.LastTargetPosition.HasValue){
             Patrol();
         }
     }
@@ -42,7 +42,7 @@ public class EnemyPatrol : MonoBehaviour
     {
         enemyMovement.RotateToPoint(currentPoint.position);
         
-        _rb.velocity = transform.up * _speed;
+        //_rb.velocity = transform.up * _speed;
 
         if(Vector2.Distance(transform.position, currentPoint.position) <= 0.5f){
             ChangeCurrentPoint();
