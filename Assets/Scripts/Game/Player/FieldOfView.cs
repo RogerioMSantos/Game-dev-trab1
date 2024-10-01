@@ -7,29 +7,33 @@ using System;
 public class FieldOfView : MonoBehaviour
 {
     private Mesh mesh;
-
     private Vector3 origin;
     float fov;
     private float startingAngle;
 
     private bool playerDetected;
+    private MeshRenderer meshRenderer;
 
     private void Start()
     {
         mesh = new Mesh();
-
         GetComponent<MeshFilter>().mesh = mesh;
+        
+        // Pega o MeshRenderer para alterar a cor
+        meshRenderer = GetComponent<MeshRenderer>();
+
         fov = 90f;
         origin = Vector3.zero;
         startingAngle = 0f;
         playerDetected = false;
+
+        // Permite que o material tenha transparência
+        meshRenderer.material = new Material(Shader.Find("Sprites/Default"));
     }
 
     private void Update()
     {
-
         Vector3 raycastOrigin = transform.position;
-
         float raycastAngle = transform.eulerAngles.z;
 
         int rayCount = 50;
@@ -53,7 +57,9 @@ public class FieldOfView : MonoBehaviour
         {
             Vector3 vertex;
 
-            RaycastHit2D raycast = Physics2D.Raycast(raycastOrigin, UtilsClass.GetVectorFromAngle(raycastAngle), viewDistance);
+            int layerMask = ~LayerMask.GetMask("Enemy");
+
+            RaycastHit2D raycast = Physics2D.Raycast(raycastOrigin, UtilsClass.GetVectorFromAngle(raycastAngle), viewDistance, layerMask);
 
             if (raycast.collider == null)
             {
@@ -66,7 +72,6 @@ public class FieldOfView : MonoBehaviour
                     playerNotDetected = false;
                 }
                 vertex = transform.InverseTransformPoint(raycast.point);
-                
             }
 
             vertices[vertexIndex] = vertex;
@@ -91,6 +96,18 @@ public class FieldOfView : MonoBehaviour
         mesh.vertices = vertices;
         mesh.uv = uv;
         mesh.triangles = triangles;
+
+        // Define a cor transparente dependendo da detecção
+        Color color;
+        if (playerDetected)
+        {
+            color = new Color(1f, 0f, 0f, 0.5f); // Vermelho com transparência
+        }
+        else
+        {
+            color = new Color(1f, 1f, 1f, 0.5f); // Branco com transparência
+        }
+        meshRenderer.material.color = color;
     }
 
     public void SetOrigin(Vector3 origin)
